@@ -1,12 +1,11 @@
-const {Router} = require('express');
+const { Router } = require('express');
 const router = Router();
 
 const Course = require('../models/course');
 
-
 router.get('/', async (req, res) => {
-  const courses = await Course.getAll();
-
+  const courses = await Course.find();
+  console.log(courses);
   res.render('courses', {
     title: 'Courses',
     isCourses: true,
@@ -19,7 +18,7 @@ router.get('/:id/edit', async (req, res) => {
     return res.redirect('/');
   }
 
-  const course = await Course.getById(req.params.id);
+  const course = await Course.findById(req.params.id);
 
   res.render('course-edit', {
     title: `Edit ${course.title}`,
@@ -28,12 +27,13 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 router.post('/edit', async (req, res) => {
-  await Course.updateById(req.body);
+  const { id, ...body } = req.body;
+  await Course.findByIdAndUpdate(id, body);
   res.redirect('/courses');
 });
 
 router.get('/:id', async (req, res) => {
-  const course = await Course.getById(req.params.id);
+  const course = await Course.findById(req.params.id);
 
   res.render('course', {
     layout: 'empty',

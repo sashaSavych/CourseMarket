@@ -1,4 +1,4 @@
-const {Router} = require('express');
+const { Router } = require('express');
 const router = Router();
 
 const Course = require('../models/course');
@@ -12,11 +12,14 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req, res) => {
   const { body: { title, price, img } } = req;
-  const course = new Course(title, price, img);
+  const course = new Course({ title, price, img });
 
-  await course.save();
-
-  res.redirect('/courses')
+  try {
+    await course.save();
+    res.redirect('/courses');
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 module.exports = router;
