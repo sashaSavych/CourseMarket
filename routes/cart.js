@@ -1,28 +1,39 @@
 const { Router } = require('express');
 const router = Router();
 
-const Cart = require('../models/cart');
 const Course = require('../models/course');
 
 router.post('/add', async (req, res) => {
-    const course = await Course.getById(req.body.id);
-    await Cart.addItem(course);
+    const course = await Course.findById(req.body.id);
+    await req.user.addToCart(course);
 
     res.redirect('/cart');
 });
 
 router.get('/', async (req, res) => {
-    const cart = await Cart.getState();
+    const user = await req.user
+        .populate('cart.items.courseId')
+        .execPopulate();
+    const courses = user.cart.items.map(({ courseId, count }) => ({ ...courseId._doc, count, id: courseId.id }));
+    const price = courses.reduce((total, course) => total += course.price * course.count, 0);
+
     res.render('cart', {
         title: 'Cart',
         isCart: true,
-        ...cart
+        courses,
+        price
     });
 });
 
 router.delete('/remove/:id', async (req, res) => {
-   const cart =  await Cart.removeItem(req.params.id);
-   res.status(200).json(cart);
+    await req.user.removeFromCart(req.params.id);
+    const user = await req.user
+        .populate('cart.items.courseId')
+        .execPopulate();
+    const courses = user.cart.items.map(({ courseId, count }) => ({ ...courseId._doc, count, id: courseId.id }));
+    const price = courses.reduce((total, course) => total += course.price * course.count, 0);
+
+    res.status(200).json({ courses, price });
 });
 
 module.exports = router;

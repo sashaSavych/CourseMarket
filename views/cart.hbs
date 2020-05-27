@@ -23,6 +23,10 @@
         <p>
             <strong>Total: </strong><span class="price">{{price}}</span>
         </p>
+
+        <form action="/orders" method="post">
+            <button type="submit" class="btn">Confirm order</button>
+        </form>
     {{else}}
         <p>No added courses here</p>
     {{/if}}
