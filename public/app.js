@@ -57,3 +57,5 @@ if (cartContainer) {
         }
     });
 }
+
+var instance = M.Tabs.init(document.querySelectorAll('.tabs'));
