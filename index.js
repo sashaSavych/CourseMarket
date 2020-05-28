@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongodb-session')(expressSession);
 const csurf = require('csurf');
+const connectFlash = require('connect-flash');
 
 const homeRoutes = require('./routes/home');
 const cartRoutes = require('./routes/cart');
@@ -18,10 +19,7 @@ const authRoutes = require('./routes/auth');
 const variablesMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
 const mongoDBUrl = 'mongodb+srv://course-market-user:xmCfucpUGvivKEsx@cluster0-zxqn8.mongodb.net/courseMarket';
-const sessionStore = new MongoStore({
-  collection: 'sessions',
-  uri: mongoDBUrl
-});
+const sessionStore = new MongoStore({ collection: 'sessions', uri: mongoDBUrl });
 
 const app = express();
 
@@ -43,6 +41,7 @@ app.use(expressSession({
   store: sessionStore
 }));
 app.use(csurf());
+app.use(connectFlash());
 app.use(variablesMiddleware);
 app.use(userMiddleware);
 
