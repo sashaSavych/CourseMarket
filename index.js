@@ -6,6 +6,7 @@ const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-ac
 const mongoose = require('mongoose');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongodb-session')(expressSession);
+const csurf = require('csurf');
 
 const homeRoutes = require('./routes/home');
 const cartRoutes = require('./routes/cart');
@@ -41,6 +42,7 @@ app.use(expressSession({
   saveUninitialized: false,
   store: sessionStore
 }));
+app.use(csurf());
 app.use(variablesMiddleware);
 app.use(userMiddleware);
 
@@ -60,9 +62,7 @@ async function start() {
     });
 
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`)
-    });
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   } catch (e) {
     console.error(e);
   }
