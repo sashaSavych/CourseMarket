@@ -15,6 +15,7 @@ const ordersRoutes = require('./routes/orders');
 const authRoutes = require('./routes/auth');
 
 const variablesMiddleware = require('./middleware/variables');
+const userMiddleware = require('./middleware/user');
 const mongoDBUrl = 'mongodb+srv://course-market-user:xmCfucpUGvivKEsx@cluster0-zxqn8.mongodb.net/courseMarket';
 const sessionStore = new MongoStore({
   collection: 'sessions',
@@ -41,6 +42,7 @@ app.use(expressSession({
   store: sessionStore
 }));
 app.use(variablesMiddleware);
+app.use(userMiddleware);
 
 app.use('/', homeRoutes);
 app.use('/add', addRoutes);
