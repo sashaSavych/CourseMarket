@@ -28,8 +28,14 @@
             <h1>Sign up</h1>
             <form action="/auth/register" method="POST">
                 <div class="input-field">
-                    <input id="remail" name="email" type="email" class="validate" required>
-                    <label for="remail">Email</label>
+                    <input id="name" name="name" type="text" class="validate" required>
+                    <label for="name">Name</label>
+                    <span class="helper-text" data-error="Enter your name"></span>
+                </div>
+
+                <div class="input-field">
+                    <input id="email" name="email" type="email" class="validate" required>
+                    <label for="email">Email</label>
                     <span class="helper-text" data-error="Enter email"></span>
                 </div>
 
