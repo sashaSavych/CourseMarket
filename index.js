@@ -16,10 +16,10 @@ const coursesRoutes = require('./routes/courses');
 const ordersRoutes = require('./routes/orders');
 const authRoutes = require('./routes/auth');
 
+const keys = require('./keys');
 const variablesMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
-const mongoDBUrl = 'mongodb+srv://course-market-user:xmCfucpUGvivKEsx@cluster0-zxqn8.mongodb.net/courseMarket';
-const sessionStore = new MongoStore({ collection: 'sessions', uri: mongoDBUrl });
+const sessionStore = new MongoStore({ collection: 'sessions', uri: keys.MONGO_URI });
 
 const app = express();
 
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended: true}));
 
 app.use(expressSession({
-  secret: 'some secret value',
+  secret: keys.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: sessionStore
@@ -54,7 +54,7 @@ app.use('/auth', authRoutes);
 
 async function start() {
   try {
-    await mongoose.connect(mongoDBUrl, {
+    await mongoose.connect(keys.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false
